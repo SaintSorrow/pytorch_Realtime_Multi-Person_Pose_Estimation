@@ -182,7 +182,7 @@ model.eval()
 
 param_, model_ = config_reader()
 
-test_image = '../sample_image/ski.jpg'
+test_image = '/content/src/pytorch_Realtime_Multi-Person_Pose_Estimation/network/caffe_to_pytorch/testing/sample_image/ski.jpg'
 #test_image = 'a.jpg'
 oriImg = cv2.imread(test_image) # B,G,R order
 
@@ -208,12 +208,14 @@ for m in range(len(multiplier)):
     
     output_blobs = net.forward()
     
-    output1_ = net.blobs[output_blobs.keys()[0]].data
-    output2_ = net.blobs[output_blobs.keys()[1]].data
+    #output1_ = net.blobs[output_blobs.keys()[0]].data
+    output1_ = net.blobs[list(output_blobs.keys())[0]].data
+    #output2_ = net.blobs[output_blobs.keys()[1]].data
+    output2_ = net.blobs[list(output_blobs.keys())[1]].data
     
     print('output1 have %10.10f%% relative error'%(np.linalg.norm(output1-output1_)/np.linalg.norm(output1_)*100))
     print('output2 have %10.10f%% relative error'%(np.linalg.norm(output2-output2_)/np.linalg.norm(output2_)*100))
     
 
 
-torch.save(model.state_dict(), '../model/pose_model.pth')    
+torch.save(model.state_dict(), '/content/src/pytorch_Realtime_Multi-Person_Pose_Estimation/network/caffe_to_pytorch/model/pose_model.pth')
