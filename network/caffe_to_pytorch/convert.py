@@ -18,8 +18,8 @@ import cv2
 import util
 from config_reader import config_reader
 
-caffemodel = '../model/_trained_COCO/pose_iter_440000.caffemodel'
-deployFile = '../model/_trained_COCO/pose_deploy.prototxt'
+caffemodel = '/content/src/pytorch_Realtime_Multi-Person_Pose_Estimation/network/caffe_to_pytorch/model/_trained_COCO/pose_deploy.prototxt'
+deployFile = '/content/src/pytorch_Realtime_Multi-Person_Pose_Estimation/network/caffe_to_pytorch/model/_trained_COCO/pose_deploy.prototxt'
 caffe.set_mode_cpu()
 net = caffe.Net(deployFile, caffemodel, caffe.TEST)
 
@@ -45,14 +45,14 @@ def make_layers(cfg_dict):
     layers = []
     for i in range(len(cfg_dict)-1):
         one_ = cfg_dict[i]
-        for k,v in one_.iteritems():      
+        for k,v in one_.items():      
             if 'pool' in k:
                 layers += [nn.MaxPool2d(kernel_size=v[0], stride=v[1], padding=v[2] )]
             else:
                 conv2d = nn.Conv2d(in_channels=v[0], out_channels=v[1], kernel_size=v[2], stride = v[3], padding=v[4])
                 layers += [conv2d, nn.ReLU(inplace=True)]
     one_ = cfg_dict[-1].keys()
-    k = one_[0]
+    k = list(one_)[0]
     v = cfg_dict[-1][k]
     conv2d = nn.Conv2d(in_channels=v[0], out_channels=v[1], kernel_size=v[2], stride = v[3], padding=v[4])
     layers += [conv2d]
@@ -61,7 +61,7 @@ def make_layers(cfg_dict):
 layers = []
 for i in range(len(block0)):
     one_ = block0[i]
-    for k,v in one_.iteritems():      
+    for k,v in one_.items():      
         if 'pool' in k:
             layers += [nn.MaxPool2d(kernel_size=v[0], stride=v[1], padding=v[2] )]
         else:
@@ -71,7 +71,7 @@ for i in range(len(block0)):
 models = {}           
 models['block0']=nn.Sequential(*layers)        
 
-for k,v in blocks.iteritems():
+for k,v in blocks.items():
     models[k] = make_layers(v)
                 
     
